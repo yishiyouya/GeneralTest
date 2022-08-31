@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+	<Properties>
+		<!-- 根目录 -->
+		<Property name="baseDir">log</Property>
+		<!-- 保存最近N天 ,单位：d m y,注意：设置的天数比实际保存的天数多一天，例如设置7d，则实际保存的天数为8d. -->
+		<Property name="saveDays">30d</Property>
+		<!-- 每一类文件最大压缩个数 -->
+		<Property name="fileCountPerCategory">200</Property>
+		<!-- 每一类文件大小 单位：KB MB GB ,例如：10240 KB -->
+		<Property name="fileSizePerCategory">10240 KB</Property>
+		<!-- 日志开头输出内容格式 -->
+		<Property name="globalPatternLayout">%-5p row: %L, time: %-4r %m%n %ex</Property>
+		<Property name="filePatternLayout">%-d [%t] %-5p %c %L - %m%n %ex</Property>
+		<!-- 全局日志级别 -->
+		<Property name="loglevel">DEBUG</Property>
+	</Properties>
+
+	<appenders>
+
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${globalPatternLayout}"/>
+		</Console>
+
+	</appenders>
+
+	<loggers>
+		
+		<AsyncLogger name="mywork">
+			<level value="debug" />
+		</AsyncLogger>
+	
+		<AsyncRoot level="${loglevel}" includeLocation="true">
+			<appender-ref ref="STDOUT" />
+		</AsyncRoot>
+		
+	</loggers>
+
+</configuration>

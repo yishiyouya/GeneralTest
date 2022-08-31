@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+	<Properties>
+		<!-- 根目录 -->
+		<Property name="baseDir">log</Property>
+		<!-- 保存最近N天 ,单位：d m y,注意：设置的天数比实际保存的天数多一天，例如设置7d，则实际保存的天数为8d. -->
+		<Property name="saveDays">30d</Property>
+		<!-- 每一类文件最大压缩个数 -->
+		<Property name="fileCountPerCategory">200</Property>
+		<!-- 每一类文件大小 单位：KB MB GB ,例如：10240 KB -->
+		<Property name="fileSizePerCategory">10240 KB</Property>
+		<!-- 日志开头输出内容格式 -->
+		<Property name="globalPatternLayout">%-5p row: %L, time: %-4r %m%n %ex</Property>
+		<Property name="filePatternLayout">%-d [%t] %-5p %c %L - %m%n %ex</Property>
+		<!-- 全局日志级别 -->
+		<Property name="loglevel">debug</Property>
+	</Properties>
+
+	<appenders>
+
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${globalPatternLayout}"/>
+		</Console>
+
+		<RollingFile name="FILE_error"
+			fileName="${baseDir}/algo_error.log"
+			filePattern="${baseDir}/$${date:yyyy}/algo_error-%d{yyyy-MM-dd}-%i.log.gz">
+
+			<filters>
+				<ThresholdFilter level="INFO" onMatch="DENY" onMismatch="NEUTRAL"></ThresholdFilter>
+				<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"></ThresholdFilter>
+			</filters>
+			<PatternLayout pattern="${filePatternLayout}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true"
+					interval="1" />
+				<SizeBasedTriggeringPolicy
+					size="${fileSizePerCategory}" />
+			</Policies>
+			<DefaultRolloverStrategy
+				max="${fileCountPerCategory}">
+				<Delete basePath="${baseDir}" maxDepth="2">
+					<IfFileName glob="*/algo_error-*.log.gz">
+						<IfLastModified age="${saveDays}">
+							<IfAny>
+								<IfAccumulatedFileSize
+									exceeds="${fileSizePerCategory}" />
+								<IfAccumulatedFileCount exceeds="2" />
+							</IfAny>
+						</IfLastModified>
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+
+		<RollingFile name="FILE_ERROR"
+			fileName="${baseDir}/algo_error.log"
+			filePattern="${baseDir}/$${date:yyyy}/algo_error-%d{yyyy-MM-dd}-%i.log.gz">
+
+			<filters>
+				<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+				<RegexFilter regex=".*DATABASECHANGELOGLOCK.*" onMatch="DENY" onMismatch="ACCEPT"></RegexFilter>
+			</filters>
+			<PatternLayout pattern="${filePatternLayout}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true"
+					interval="1" />
+				<SizeBasedTriggeringPolicy
+					size="${fileSizePerCategory}" />
+			</Policies>
+			<DefaultRolloverStrategy
+				max="${fileCountPerCategory}">
+				<Delete basePath="${baseDir}" maxDepth="2">
+					<IfFileName glob="*/algo_error-*.log.gz">
+						<IfLastModified age="${saveDays}">
+							<IfAny>
+								<IfAccumulatedFileSize
+									exceeds="${fileSizePerCategory}" />
+								<IfAccumulatedFileCount exceeds="2" />
+							</IfAny>
+						</IfLastModified>
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+
+		<RollingFile name="FILE_INFO"
+			fileName="${baseDir}/algo_info.log"
+			filePattern="${baseDir}/$${date:yyyy}/algo_info-%d{yyyy-MM-dd}-%i.log.gz">
+			<PatternLayout pattern="${filePatternLayout}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true"	interval="1" />
+				<SizeBasedTriggeringPolicy size="${fileSizePerCategory}" />
+			</Policies>
+			<Filters>
+				<ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+				<ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+			<DefaultRolloverStrategy
+				max="${fileCountPerCategory}">
+				<Delete basePath="${baseDir}" maxDepth="2">
+					<IfFileName glob="*/algo_info-*.log.gz">
+						<IfLastModified age="${saveDays}">
+							<IfAny>
+								<IfAccumulatedFileSize
+									exceeds="${fileSizePerCategory}" />
+								<IfAccumulatedFileCount exceeds="2" />
+							</IfAny>
+						</IfLastModified>
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+
+		<RollingFile name="FILE_LOG"
+			fileName="${baseDir}/algo_all.log"
+			filePattern="${baseDir}/$${date:yyyy}/algo_all-%d{yyyy-MM-dd}-%i.log.gz">
+			<ThresholdFilter level="all" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${filePatternLayout}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true" interval="1" />
+				<SizeBasedTriggeringPolicy size="${fileSizePerCategory}" />
+			</Policies>
+			<DefaultRolloverStrategy max="${fileCountPerCategory}">
+				<Delete basePath="${baseDir}" maxDepth="2">
+					<IfFileName glob="*/algo_all-*.log.gz">
+						<IfLastModified age="${saveDays}">
+							<IfAny>
+								<IfAccumulatedFileSize
+									exceeds="${fileSizePerCategory}" />
+								<IfAccumulatedFileCount exceeds="2" />
+							</IfAny>
+						</IfLastModified>
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+
+		<RollingFile name="FILE_VWAP_LOG"
+			fileName="${baseDir}/algo_vwap.log"
+			filePattern="${baseDir}/$${date:yyyy}/algo_vwap-%d{yyyy-MM-dd}-%i.log.gz">
+			<ThresholdFilter level="all" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${filePatternLayout}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true" interval="1" />
+				<SizeBasedTriggeringPolicy size="${fileSizePerCategory}" />
+			</Policies>
+			<DefaultRolloverStrategy max="${fileCountPerCategory}">
+				<Delete basePath="${baseDir}" maxDepth="2">
+					<IfFileName glob="*/algo_vwap-*.log.gz">
+						<IfLastModified age="${saveDays}">
+							<IfAny>
+								<IfAccumulatedFileSize
+									exceeds="${fileSizePerCategory}" />
+								<IfAccumulatedFileCount exceeds="2" />
+							</IfAny>
+						</IfLastModified>
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+		
+		<RollingFile name="API_ALL"
+			fileName="${baseDir}/mds_api_all.log"
+			filePattern="${baseDir}/$${date:yyyy}/mds_api_all-%d{yyyy-MM-dd}-%i.log.gz">
+			<ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${globalPatternLayout}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true" interval="1" />
+				<SizeBasedTriggeringPolicy size="${fileSizePerCategory}" />
+			</Policies>
+			<DefaultRolloverStrategy max="${fileCountPerCategory}">
+				<Delete basePath="${baseDir}" maxDepth="2">
+					<IfFileName glob="*/mds_api_all-*.log.gz">
+						<IfLastModified age="${saveDays}">
+							<IfAny>
+								<IfAccumulatedFileSize
+									exceeds="${fileSizePerCategory}" />
+								<IfAccumulatedFileCount exceeds="2" />
+							</IfAny>
+						</IfLastModified>
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+		
+		<RollingFile name="ERROR_LOG"
+			fileName="${baseDir}/mds_api_error.log"
+			filePattern="${baseDir}/$${date:yyyy}/mds_api_error-%d{yyyy-MM-dd}-%i.log.gz">
+
+			<filters>
+				<ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+			</filters>
+			<PatternLayout pattern="${filePatternLayout}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true"
+					interval="1" />
+				<SizeBasedTriggeringPolicy
+					size="${fileSizePerCategory}" />
+			</Policies>
+			<DefaultRolloverStrategy
+				max="${fileCountPerCategory}">
+				<Delete basePath="${baseDir}" maxDepth="2">
+					<IfFileName glob="*/mds_api_error-*.log.gz">
+						<IfLastModified age="${saveDays}">
+							<IfAny>
+								<IfAccumulatedFileSize
+									exceeds="${fileSizePerCategory}" />
+								<IfAccumulatedFileCount exceeds="2" />
+							</IfAny>
+						</IfLastModified>
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+		
+		<RollingFile name="ALL_LOG"
+			fileName="${baseDir}/mds_api_all.log"
+			filePattern="${baseDir}/$${date:yyyy}/mds_api_all-%d{yyyy-MM-dd}-%i.log.gz">
+			<ThresholdFilter level="all" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${filePatternLayout}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy modulate="true" interval="1" />
+				<SizeBasedTriggeringPolicy size="${fileSizePerCategory}" />
+			</Policies>
+			<DefaultRolloverStrategy max="${fileCountPerCategory}">
+				<Delete basePath="${baseDir}" maxDepth="2">
+					<IfFileName glob="*/mds_api_all-*.log.gz">
+						<IfLastModified age="${saveDays}">
+							<IfAny>
+								<IfAccumulatedFileSize
+									exceeds="${fileSizePerCategory}" />
+								<IfAccumulatedFileCount exceeds="2" />
+							</IfAny>
+						</IfLastModified>
+					</IfFileName>
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+		
+	</appenders>
+
+	<loggers>
+		
+		<Logger name="mywork.mylog4j2">
+			<level value="debug" />
+		</Logger>
+	
+		<Root level="${loglevel}" includeLocation="true">
+			<appender-ref ref="FILE_LOG" />
+			<appender-ref ref="FILE_error" />
+			<appender-ref ref="FILE_ERROR" />
+			<appender-ref ref="FILE_INFO" />
+			<appender-ref ref="STDOUT" />
+		</Root>
+		
+		
+		<!-- 设置此，可控制按 level 打屏。如果设置为error，name对应目录不打屏 -->
+		<!-- <AsyncLogger name="mywork.mylog4j2" level="debug" additivity="false">
+	      <AppenderRef ref="STDOUT"/>
+	      
+	    </AsyncLogger> -->
+	    
+	    <!-- <AsyncLogger name="API_ALL_Log" level="off">
+			<appender-ref ref="FILE_ERROR" />
+		</AsyncLogger>
+		
+		<AsyncLogger name="API_INFO_Log" level="off">
+			<appender-ref ref="FILE_ERROR" />
+		</AsyncLogger>
+		
+		<AsyncLogger name="PerformanceLog" level="off">
+			<appender-ref ref="FILE_ERROR" />
+		</AsyncLogger>
+		
+		<AsyncRoot level="${loglevel}" includeLocation="true">
+			<appender-ref ref="FILE_LOG" />
+			<appender-ref ref="FILE_ERROR" />
+			<appender-ref ref="FILE_INFO" />
+			<appender-ref ref="STDOUT" />
+		</AsyncRoot> -->
+	    
+	</loggers>
+
+</configuration>

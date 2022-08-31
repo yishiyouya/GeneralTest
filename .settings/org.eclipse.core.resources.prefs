@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+encoding//src/myjava/mybyte/MyTestByteArr.java=GBK
+encoding//src/myjava/mythread/MyMustDeadLock.java=UTF-8
+encoding//src/myjava/mythread/MyTestThreadLocal.java=UTF-8
