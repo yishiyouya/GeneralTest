@@ -33,7 +33,7 @@ public class MyTestFile {
                 "333333333333333333333333333333333333333333333333333333333333333333333",
                 "444444444444444444444444444444444444444444444444444444444444444444444"
         };
-        int MAX_LENGTH = 30000;
+        int MAX_LENGTH = 3000;
         List<String> numLists = Arrays.asList(nums);
         for (String num : numLists) {
             List<String> singleNum = new ArrayList<>();

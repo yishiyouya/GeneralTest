@@ -22,9 +22,14 @@ public class MyTestInteger {
     protected static AtomicInteger atomicInx = new AtomicInteger();
     
     public static void main(String[] args) throws Exception {
-        testMoveLeft();
+        getMaxValue();
     }
-    
+
+    public static void getMaxValue() {
+        Integer max = Integer.MAX_VALUE;
+        System.out.println(max);
+    }
+
     public static void testIntegerAdd() {
         int i = 10;
         System.out.println(i++ + i--);
